@@ -17,9 +17,13 @@ FROM alpine:3.13.1 AS git-dev
 ARG KIMAI="1.12"
 # I need to do this check somewhere, we discard all but the checkout so doing here doesn't hurt
 ADD test-kimai-version.sh /test-kimai-version.sh
+ADD plugins.txt /plugins.txt
 RUN /test-kimai-version.sh
 RUN apk add --no-cache git && \
     git clone --depth 1 --branch ${KIMAI} https://github.com/kevinpapst/kimai2.git /opt/kimai
+
+WORKDIR /opt/kimai/var/plugins
+RUN while read line; do git clone "$line"; done < /plugins.txt
 
 # production kimai source
 FROM git-dev AS git-prod

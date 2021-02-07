@@ -1,6 +1,5 @@
 version: '3.5'
 services:
-
   sqldb:
     image: mysql:5.7
     environment:
@@ -30,14 +29,15 @@ services:
     depends_on:
       - kimai
     healthcheck:
-      test:  wget --spider http://nginx/health || exit 1
+      test: wget --spider http://nginx/health || exit 1
       interval: 20s
       start_period: 10s
       timeout: 10s
       retries: 3
 
   kimai:
-    image: kimai/kimai2
+    # image: kimai/kimai2
+    build: .
     environment:
       - APP_ENV=prod
       - TRUSTED_HOSTS=localhost
@@ -67,5 +67,5 @@ services:
   #  user: 0:0
 
 volumes:
-    var:
-    public:
+  var:
+  public:
